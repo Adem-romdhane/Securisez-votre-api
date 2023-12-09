@@ -3,7 +3,6 @@ package com.nnk.springboot.service;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.repositories.UserRepository;
 import com.nnk.springboot.services.UserServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -38,7 +37,7 @@ public class UserServiceTests {
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         // Appel de la méthode addUser avec l'utilisateur fictif
-        User savedUser = userService.addUser(user);
+        User savedUser = userService.add(user);
 
         // Vérification que la méthode save a été appelée une fois
         verify(userRepository, times(1)).save(any(User.class));

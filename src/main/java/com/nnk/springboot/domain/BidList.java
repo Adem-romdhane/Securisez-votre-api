@@ -2,13 +2,16 @@ package com.nnk.springboot.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "bidlist")
@@ -28,7 +31,7 @@ public class BidList {
     Double ask;
     String benchmark;
     @Column(name = "bid_list_date")
-    Timestamp bidListDate;
+    LocalDate bidListDate;
     String commentary;
     String security;
     String status;
@@ -37,11 +40,11 @@ public class BidList {
     @Column(name = "creation_name")
     String creationName;
     @Column(name = "creation_date")
-    Timestamp creationDate;
+    LocalDate creationDate;
     @Column(name = "revision_name")
     String revisionName;
     @Column(name = "revision_date")
-    Timestamp revisionDate;
+    LocalDate revisionDate;
     @Column(name = "deal_name")
     String dealName;
     @Column(name = "deal_type")

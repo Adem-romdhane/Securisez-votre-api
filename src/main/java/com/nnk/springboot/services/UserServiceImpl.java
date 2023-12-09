@@ -9,21 +9,21 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements GenericService<User, Integer> {
 
     private final UserRepository userRepository;
     @Override
-    public User addUser(User user) {
+    public User add(User user) {
         return userRepository.save(user);
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<User> getAll() {
         return userRepository.findAll();
     }
 
     @Override
-    public User updateUser(Long id, User user) {
+    public User update(Integer id, User user) {
         return userRepository.findById(id)
                 .map(u ->{
                     u.setFullname(u.getFullname());
@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String deleteUser(Long id) {
+    public String deleteById(Integer id) {
         userRepository.deleteById(id);
         return "user deleted";
     }
