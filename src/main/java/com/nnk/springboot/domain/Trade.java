@@ -2,14 +2,17 @@ package com.nnk.springboot.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "trade")
@@ -37,7 +40,7 @@ public class Trade {
     String benchmark;
 
     @Column(name = "trade_date")
-    Timestamp tradeDate;
+    LocalDate tradeDate;
     String security;
     String status;
     String trader;
@@ -47,13 +50,13 @@ public class Trade {
     String creationName;
 
     @Column(name = "creation_date")
-    Timestamp creationDate;
+    LocalDate creationDate;
 
     @Column(name = "revision_name")
     String revisionName;
 
     @Column(name = "revision_date")
-    Timestamp revisionDate;
+    LocalDate revisionDate;
 
     @Column(name = "deal_name")
     String dealName;
