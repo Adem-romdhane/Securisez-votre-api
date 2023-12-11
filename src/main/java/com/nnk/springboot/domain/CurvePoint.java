@@ -2,14 +2,17 @@ package com.nnk.springboot.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "curvepoint")
@@ -21,9 +24,9 @@ public class CurvePoint {
     @Column(name = "curve_id")
     Integer curveId;
     @Column(name = "as_of_date")
-    Timestamp asOfDate;
+    LocalDate asOfDate;
     Double term;
     Double value;
     @Column(name = "creation_date")
-    Timestamp creationDate;
+    LocalDate creationDate;
 }
