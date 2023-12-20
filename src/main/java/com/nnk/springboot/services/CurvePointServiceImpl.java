@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -40,5 +41,17 @@ public class CurvePointServiceImpl implements GenericService<CurvePoint, Integer
     public String deleteById(Integer id) {
         curvePointRepository.deleteById(id);
         return "curve point deleted";
+    }
+
+    @Override
+    public CurvePoint findById(Integer id) {
+        Optional<CurvePoint> optionalCurvePoint = curvePointRepository.findById(id);
+        CurvePoint curvePoint = null;
+        if (optionalCurvePoint.isPresent()){
+            curvePoint = optionalCurvePoint.get();
+        }else {
+            throw new RuntimeException("curve not founded : " + curvePoint);
+        }
+        return curvePoint;
     }
 }

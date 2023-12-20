@@ -7,4 +7,6 @@ public interface GenericService<T, Integer> {
     List<T> getAll();
     T update(Integer id, T t);
     String deleteById(Integer id);
+
+    T findById(Integer id);
 }

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -41,5 +42,17 @@ public class RuleNameServiceImpl implements GenericService<RuleName, Integer> {
     public String deleteById(Integer id) {
         ruleNameRepository.deleteById(id);
         return "rule name deleted";
+    }
+
+    @Override
+    public RuleName findById(Integer id) {
+        Optional<RuleName> optionalRuleName = ruleNameRepository.findById(id);
+        RuleName ruleName = null;
+        if (optionalRuleName.isPresent()){
+            ruleName = optionalRuleName.get();
+        }else {
+            throw new RuntimeException("name not founded");
+        }
+        return ruleName;
     }
 }

@@ -67,12 +67,12 @@ CREATE TABLE IF NOT EXISTS CurvePoint
 
 CREATE TABLE IF NOT EXISTS Rating
 (
-    Id            tinyint(4) NOT NULL AUTO_INCREMENT,
+    rating_id            tinyint(4) NOT NULL AUTO_INCREMENT,
     moodys_rating VARCHAR(125),
     sand_prating  VARCHAR(125),
     fitch_rating  VARCHAR(125),
     order_number  tinyint,
-    PRIMARY KEY (Id)
+    PRIMARY KEY (rating_id)
 );
 
 
@@ -103,4 +103,4 @@ CREATE TABLE IF NOT EXISTS Users
 insert into Users(full_name, username, password, role)
 values ("Administrator", "admin", "$2a$10$pBV8ILO/s/nao4wVnGLrh.sa/rnr5pDpbeC4E.KNzQWoy8obFZdaa", "ADMIN");
 insert into Users(full_name, username, password, role)
-values ("User", "user", "$2a$10$pBV8ILO/s/nao4wVnGLrh.sa/rnr5pDpbeC4E.KNzQWoy8obFZdaa", "USER");
+values ("User", "DBUser", "$2a$10$pBV8ILO/s/nao4wVnGLrh.sa/rnr5pDpbeC4E.KNzQWoy8obFZdaa", "USER");

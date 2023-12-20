@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -32,12 +33,24 @@ public class RatingServiceImpl implements GenericService<Rating, Integer> {
                     r.setFitchRating(r.getFitchRating());
                     r.setOrderNumber(r.getOrderNumber());
                     return ratingRepository.save(r);
-                }).orElseThrow(()-> new RuntimeException("Rating not founded"));
+                }).orElseThrow(() -> new RuntimeException("Rating not founded"));
     }
 
     @Override
     public String deleteById(Integer id) {
         ratingRepository.deleteById(id);
         return "rating deleted";
+    }
+
+    @Override
+    public Rating findById(Integer id) {
+        Optional<Rating> optionalRating = ratingRepository.findById(id);
+        Rating rating = null;
+        if (optionalRating.isPresent()) {
+            rating = optionalRating.get();
+        }else {
+            throw new RuntimeException("rating not founded :" + id);
+        }
+        return rating;
     }
 }

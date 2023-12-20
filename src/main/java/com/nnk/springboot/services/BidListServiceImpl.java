@@ -1,12 +1,12 @@
 package com.nnk.springboot.services;
 
 import com.nnk.springboot.domain.BidList;
-import com.nnk.springboot.domain.User;
 import com.nnk.springboot.repositories.BidListRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -57,5 +57,17 @@ public class BidListServiceImpl implements GenericService<BidList, Integer> {
     public String deleteById(Integer id) {
         bidListRepository.deleteById(id);
         return "bid list deleted";
+    }
+
+    @Override
+    public BidList findById(Integer id) {
+        Optional<BidList> optionalBidList = bidListRepository.findById(id);
+        BidList bidList = null;
+        if (optionalBidList.isPresent()){
+            bidList = optionalBidList.get();
+        }else {
+            throw new RuntimeException("bidlist not founded : " + id);
+        }
+        return bidList;
     }
 }

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -55,5 +56,17 @@ public class TradeServiceImpl implements GenericService<Trade, Integer> {
     public String deleteById(Integer id) {
         tradeRepository.deleteById(id);
         return "trade deleted";
+    }
+
+    @Override
+    public Trade findById(Integer id) {
+        Optional<Trade> optionalTrade = tradeRepository.findById(id);
+        Trade trade = null;
+        if (optionalTrade.isPresent()){
+            trade = optionalTrade.get();
+        }else {
+            throw new RuntimeException("trade not founded ");
+        }
+        return trade;
     }
 }

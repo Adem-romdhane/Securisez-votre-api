@@ -51,4 +51,6 @@ public class BidTests {
 		Optional<BidList> bidList = bidListRepository.findById(id);
 		assertFalse(bidList.isPresent());
 	}
+
+
 }
