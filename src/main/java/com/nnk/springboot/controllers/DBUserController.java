@@ -19,20 +19,19 @@ public class DBUserController {
     }
 
     @PostMapping("/create")
-    public DBUser createUser(@RequestBody DBUser DBUser){
+    public DBUser createUser(@RequestBody DBUser DBUser) {
         return DBUserRepository.save(DBUser);
     }
 
     @RequestMapping("/user/list")
-    public String home(Model model)
-    {
+    public String home(Model model) {
         model.addAttribute("users", DBUserRepository.findAll());
         return "user/list";
     }
 
     @GetMapping("/user/add")
     public String addUser(DBUser DBUser) {
-
+        DBUserRepository.save(DBUser);
         return "user/add";
     }
 
