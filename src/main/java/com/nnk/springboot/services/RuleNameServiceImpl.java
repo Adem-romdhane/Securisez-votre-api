@@ -27,21 +27,21 @@ public class RuleNameServiceImpl implements GenericService<RuleName, Integer> {
     @Override
     public RuleName update(Integer id, RuleName ruleName) {
         return ruleNameRepository.findById(id)
-                .map(rule -> {
-                    rule.setName(rule.getName());
-                    rule.setDescription(rule.getDescription());
-                    rule.setJson(rule.getJson());
-                    rule.setTemplate(rule.getTemplate());
-                    rule.setSqlStr(rule.getSqlStr());
-                    rule.setSqlPart(rule.getSqlPart());
-                    return ruleNameRepository.save(rule);
+                .map(r -> {
+                    r.setName(ruleName.getName());
+                    r.setDescription(ruleName.getDescription());
+                    r.setJson(ruleName.getJson());
+                    r.setTemplate(ruleName.getTemplate());
+                    r.setSqlStr(ruleName.getSqlStr());
+                    r.setSqlPart(ruleName.getSqlPart());
+                    return ruleNameRepository.save(r);
                 }).orElseThrow(() -> new RuntimeException("rule name not founded"));
     }
 
     @Override
     public String deleteById(Integer id) {
         ruleNameRepository.deleteById(id);
-        return "rule name deleted";
+        return "r name deleted";
     }
 
     @Override

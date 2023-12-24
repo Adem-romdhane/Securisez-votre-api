@@ -37,12 +37,12 @@ public class DBUserServiceImpl implements GenericService<DBUser, Integer> {
     }
 
     @Override
-    public DBUser update(Integer id, DBUser DBUser) {
+    public DBUser update(Integer id, DBUser user) {
         return DBUserRepository.findById(id)
                 .map(u -> {
-                    u.setFullname(u.getFullname());
-                    u.setUsername(u.getUsername());
-                    u.setPassword(u.getPassword());
+                    u.setFullname(user.getFullname());
+                    u.setUsername(user.getUsername());
+                    u.setPassword(user.getPassword());
                     return DBUserRepository.save(u);
                 }).orElseThrow(() -> new RuntimeException("User non trouvé !"));
     }

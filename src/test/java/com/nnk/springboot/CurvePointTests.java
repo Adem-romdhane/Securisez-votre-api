@@ -9,6 +9,8 @@ import com.nnk.springboot.services.BidListServiceImpl;
 import com.nnk.springboot.services.CurvePointServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -23,8 +25,12 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 public class CurvePointTests {
 
-	@Autowired
+	@Mock
 	private CurvePointRepository curvePointRepository;
+
+	@InjectMocks
+	private CurvePointServiceImpl curvePointService;
+
 
 	@Test
 	public void curvePointTest() {
@@ -109,6 +115,40 @@ public class CurvePointTests {
 		assertEquals(curvePointList.get(1), returnedCurvePoints.get(1));
 	}
 
+	@Test
+	public void testUpdateCurvePoint() {
+		// Créer un ID fictif pour le test
+		Integer curvePointId = 1;
+		CurvePoint curvePointToUpdate = new CurvePoint();
+		curvePointToUpdate.setCurveId(100);
+		curvePointToUpdate.setTerm(5.0);
+		curvePointToUpdate.setValue(50.0);
+
+		// Créer un objet CurvePoint existant dans la base de données pour simuler la recherche
+		CurvePoint existingCurvePoint = new CurvePoint();
+		existingCurvePoint.setId(curvePointId);
+		existingCurvePoint.setCurveId(200);
+		existingCurvePoint.setTerm(10.0);
+		existingCurvePoint.setValue(25.0);
+
+		// Configurer le comportement simulé du repository
+		when(curvePointRepository.findById(curvePointId)).thenReturn(Optional.of(existingCurvePoint));
+		when(curvePointRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+		// Appeler la méthode à tester
+		CurvePoint updatedCurvePoint = curvePointService.update(curvePointId, curvePointToUpdate);
+
+		// Vérifier que la méthode a renvoyé un CurvePoint mis à jour
+		assertNotNull(updatedCurvePoint);
+		assertEquals(curvePointId, updatedCurvePoint.getId());
+		assertEquals(curvePointToUpdate.getCurveId(), updatedCurvePoint.getCurveId());
+		assertEquals(curvePointToUpdate.getTerm(), updatedCurvePoint.getTerm());
+		assertEquals(curvePointToUpdate.getValue(), updatedCurvePoint.getValue());
+
+		// Vérifier que la méthode a bien utilisé le repository pour sauvegarder le CurvePoint mis à jour
+		verify(curvePointRepository, times(1)).findById(curvePointId);
+		verify(curvePointRepository, times(1)).save(existingCurvePoint);
+	}
 	@Test
 	public void testDeleteById() {
 		// Création d'un ID fictif pour le test

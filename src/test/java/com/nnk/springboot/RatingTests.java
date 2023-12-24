@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @SpringBootTest
@@ -107,6 +107,46 @@ public class RatingTests {
         assertEquals(mockRatingList.size(), retrievedRatings.size());
         // ... Vérification d'autres attributs si nécessaire
     }
+
+
+    @Test
+    public void testUpdateRating() {
+        // Créer un ID fictif pour le test
+        Integer ratingId = 1;
+        Rating ratingToUpdate = new Rating();
+        ratingToUpdate.setMoodysRating("test");
+        ratingToUpdate.setSandPRating("test");
+        ratingToUpdate.setFitchRating("test");
+        ratingToUpdate.setOrderNumber(5);
+
+        // Créer un objet Rating existant dans la base de données pour simuler la recherche
+        Rating existingRating = new Rating();
+        existingRating.setRatingId(ratingId);
+        existingRating.setMoodysRating("test1");
+        existingRating.setSandPRating("TEST2");
+        existingRating.setFitchRating("Test3");
+        existingRating.setOrderNumber(10);
+
+        // Configurer le comportement simulé du repository
+        when(ratingRepository.findById(ratingId)).thenReturn(Optional.of(existingRating));
+        when(ratingRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Appeler la méthode à tester
+        Rating updatedRating = ratingService.update(ratingId, ratingToUpdate);
+
+        // Vérifier que la méthode a renvoyé un Rating mis à jour
+        assertNotNull(updatedRating);
+        assertEquals(ratingId, updatedRating.getRatingId());
+        assertEquals(ratingToUpdate.getMoodysRating(), updatedRating.getMoodysRating());
+        assertEquals(ratingToUpdate.getSandPRating(), updatedRating.getSandPRating());
+        assertEquals(ratingToUpdate.getFitchRating(), updatedRating.getFitchRating());
+        assertEquals(ratingToUpdate.getOrderNumber(), updatedRating.getOrderNumber());
+
+        // Vérifier que la méthode a bien utilisé le repository pour sauvegarder le Rating mis à jour
+        verify(ratingRepository, times(1)).findById(ratingId);
+        verify(ratingRepository, times(1)).save(existingRating);
+    }
+
 
     @Test
     void testDeleteRatingById() {

@@ -28,27 +28,9 @@ public class BidListServiceImpl implements GenericService<BidList, Integer> {
     public BidList update(Integer id, BidList bidList) {
         return bidListRepository.findById(id)
                 .map(b -> {
-                    b.setAccount(b.getAccount());
-                    b.setType(b.getType());
-                    b.setBidQuantity(b.getBidQuantity());
-                    b.setAskQuantity(b.getAskQuantity());
-                    b.setBid(b.getBid());
-                    b.setAsk(b.getAsk());
-                    b.setBenchmark(b.getBenchmark());
-                    b.setBidListDate(b.getBidListDate());
-                    b.setCommentary(b.getCommentary());
-                    b.setSecurity(b.getSecurity());
-                    b.setStatus(b.getStatus());
-                    b.setTrader(b.getTrader());
-                    b.setBook(b.getBook());
-                    b.setCreationName(b.getCreationName());
-                    b.setCreationDate(b.getCreationDate());
-                    b.setRevisionName(b.getRevisionName());
-                    b.setRevisionDate(b.getRevisionDate());
-                    b.setDealName(b.getDealName());
-                    b.setDealType(b.getDealType());
-                    b.setSourceListId(b.getSourceListId());
-                    b.setSide(b.getSide());
+                    b.setAccount(bidList.getAccount());
+                    b.setType(bidList.getType());
+                    b.setBidQuantity(bidList.getBidQuantity());
                     return bidListRepository.save(b);
                 }).orElseThrow(() -> new RuntimeException("bid list not founded"));
     }

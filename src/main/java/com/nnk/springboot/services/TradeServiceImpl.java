@@ -28,26 +28,9 @@ public class TradeServiceImpl implements GenericService<Trade, Integer> {
     public Trade update(Integer id, Trade trade) {
         return tradeRepository.findById(id)
                 .map(t -> {
-                    t.setAccount(t.getAccount());
-                    t.setType(t.getType());
-                    t.setBuyQuantity(t.getBuyQuantity());
-                    t.setSellQuantity(t.getSellQuantity());
-                    t.setBuyPrice(t.getBuyPrice());
-                    t.setSellPrice(t.getSellPrice());
-                    t.setBenchmark(t.getBenchmark());
-                    t.setTradeDate(t.getTradeDate());
-                    t.setSecurity(t.getSecurity());
-                    t.setStatus(t.getStatus());
-                    t.setTrader(t.getTrader());
-                    t.setBook(t.getBook());
-                    t.setCreationName(t.getCreationName());
-                    t.setCreationDate(t.getCreationDate());
-                    t.setRevisionName(t.getRevisionName());
-                    t.setRevisionDate(t.getRevisionDate());
-                    t.setDealName(t.getDealName());
-                    t.setDealType(t.getDealType());
-                    t.setSourceListId(t.getSourceListId());
-                    t.setSide(t.getSide());
+                    t.setAccount(trade.getAccount());
+                    t.setType(trade.getType());
+                    t.setBuyQuantity(trade.getBuyQuantity());
                     return tradeRepository.save(t);
                 }).orElseThrow(() -> new RuntimeException("trade not founded"));
     }

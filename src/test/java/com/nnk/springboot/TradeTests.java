@@ -92,6 +92,41 @@ public class TradeTests {
 
 
 	@Test
+	public void testUpdateTrade() {
+		// Créer un ID fictif pour le test
+		Integer tradeId = 1;
+		Trade tradeToUpdate = new Trade();
+		tradeToUpdate.setAccount("New Account");
+		tradeToUpdate.setType("New Type");
+		tradeToUpdate.setBuyQuantity(100.0);
+
+		// Créer un objet Trade existant dans la base de données pour simuler la recherche
+		Trade existingTrade = new Trade();
+		existingTrade.setTradeId(tradeId);
+		existingTrade.setAccount("Old Account");
+		existingTrade.setType("Old Type");
+		existingTrade.setBuyQuantity(50.);
+
+		// Configurer le comportement simulé du repository
+		when(tradeRepository.findById(tradeId)).thenReturn(Optional.of(existingTrade));
+		when(tradeRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+		// Appeler la méthode à tester
+		Trade updatedTrade = tradeService.update(tradeId, tradeToUpdate);
+
+		// Vérifier que la méthode a renvoyé un Trade mis à jour
+		assertNotNull(updatedTrade);
+		assertEquals(tradeId, updatedTrade.getTradeId());
+		assertEquals(tradeToUpdate.getAccount(), updatedTrade.getAccount());
+		assertEquals(tradeToUpdate.getType(), updatedTrade.getType());
+		assertEquals(tradeToUpdate.getBuyQuantity(), updatedTrade.getBuyQuantity());
+
+		// Vérifier que la méthode a bien utilisé le repository pour sauvegarder le Trade mis à jour
+		verify(tradeRepository, times(1)).findById(tradeId);
+		verify(tradeRepository, times(1)).save(existingTrade);
+	}
+
+	@Test
 	void testDeleteTradeById() {
 		Integer tradeIdToDelete = 1;
 

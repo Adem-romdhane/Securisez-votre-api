@@ -28,11 +28,9 @@ public class CurvePointServiceImpl implements GenericService<CurvePoint, Integer
     public CurvePoint update(Integer id, CurvePoint curvePoint) {
         return curvePointRepository.findById(id)
                 .map(c -> {
-                    c.setCurveId(c.getCurveId());
-                    c.setAsOfDate(c.getAsOfDate());
-                    c.setTerm(c.getTerm());
-                    c.setValue(c.getValue());
-                    c.setCreationDate(c.getCreationDate());
+                    c.setCurveId(curvePoint.getCurveId());
+                    c.setTerm(curvePoint.getTerm());
+                    c.setValue(curvePoint.getValue());
                     return curvePointRepository.save(c);
                 }).orElseThrow(() -> new RuntimeException("curve point not founded"));
     }

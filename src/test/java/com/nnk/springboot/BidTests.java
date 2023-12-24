@@ -143,6 +143,40 @@ public class BidTests {
     }
 
 
+    @Test
+    public void testUpdateBidList() {
+        // Créer un ID fictif pour le test
+        Integer bidListId = 1;
+        BidList bidListToUpdate = new BidList();
+        bidListToUpdate.setAccount("TestAccount");
+        bidListToUpdate.setType("TestType");
+        bidListToUpdate.setBidQuantity(100.0);
+
+        // Créer un objet BidList existant dans la base de données pour simuler la recherche
+        BidList existingBidList = new BidList();
+        existingBidList.setBidListId(bidListId);
+        existingBidList.setAccount("ExistingAccount");
+        existingBidList.setType("ExistingType");
+        existingBidList.setBidQuantity(50.0);
+
+        // Configurer le comportement simulé du repository
+        when(bidListRepository.findById(bidListId)).thenReturn(Optional.of(existingBidList));
+        when(bidListRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Appeler la méthode à tester
+        BidList updatedBidList = bidListService.update(bidListId, bidListToUpdate);
+
+        // Vérifier que la méthode a renvoyé une BidList mise à jour
+        assertNotNull(updatedBidList);
+        assertEquals(bidListId, updatedBidList.getBidListId());
+        assertEquals(bidListToUpdate.getAccount(), updatedBidList.getAccount());
+        assertEquals(bidListToUpdate.getType(), updatedBidList.getType());
+        assertEquals(bidListToUpdate.getBidQuantity(), updatedBidList.getBidQuantity());
+
+        // Vérifier que la méthode a bien utilisé le repository pour sauvegarder la BidList mise à jour
+        verify(bidListRepository, times(1)).findById(bidListId);
+        verify(bidListRepository, times(1)).save(existingBidList);
+    }
 
 
     @Test

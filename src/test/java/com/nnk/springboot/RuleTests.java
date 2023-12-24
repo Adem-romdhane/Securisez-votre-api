@@ -99,6 +99,51 @@ public class RuleTests {
         // Vous pouvez ajouter d'autres assertions pour vérifier la correspondance des éléments
     }
 
+
+    @Test
+    public void testUpdateRuleName() {
+        // Créer un ID fictif pour le test
+        Integer ruleNameId = 1;
+        RuleName ruleNameToUpdate = new RuleName();
+        ruleNameToUpdate.setName("New Name");
+        ruleNameToUpdate.setDescription("New Description");
+        ruleNameToUpdate.setJson("New Json");
+        ruleNameToUpdate.setTemplate("New Template");
+        ruleNameToUpdate.setSqlStr("New SQL");
+        ruleNameToUpdate.setSqlPart("New SQL Part");
+
+        // Créer un objet RuleName existant dans la base de données pour simuler la recherche
+        RuleName existingRuleName = new RuleName();
+        existingRuleName.setId(ruleNameId);
+        existingRuleName.setName("Old Name");
+        existingRuleName.setDescription("Old Description");
+        existingRuleName.setJson("Old Json");
+        existingRuleName.setTemplate("Old Template");
+        existingRuleName.setSqlStr("Old SQL");
+        existingRuleName.setSqlPart("Old SQL Part");
+
+        // Configurer le comportement simulé du repository
+        when(ruleNameRepository.findById(ruleNameId)).thenReturn(Optional.of(existingRuleName));
+        when(ruleNameRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Appeler la méthode à tester
+        RuleName updatedRuleName = ruleNameService.update(ruleNameId, ruleNameToUpdate);
+
+        // Vérifier que la méthode a renvoyé un RuleName mis à jour
+        assertNotNull(updatedRuleName);
+        assertEquals(ruleNameId, updatedRuleName.getId());
+        assertEquals(ruleNameToUpdate.getName(), updatedRuleName.getName());
+        assertEquals(ruleNameToUpdate.getDescription(), updatedRuleName.getDescription());
+        assertEquals(ruleNameToUpdate.getJson(), updatedRuleName.getJson());
+        assertEquals(ruleNameToUpdate.getTemplate(), updatedRuleName.getTemplate());
+        assertEquals(ruleNameToUpdate.getSqlStr(), updatedRuleName.getSqlStr());
+        assertEquals(ruleNameToUpdate.getSqlPart(), updatedRuleName.getSqlPart());
+
+        // Vérifier que la méthode a bien utilisé le repository pour sauvegarder le RuleName mis à jour
+        verify(ruleNameRepository, times(1)).findById(ruleNameId);
+        verify(ruleNameRepository, times(1)).save(existingRuleName);
+    }
+
     @Test
     void testDeleteRuleNameById() {
         Integer ruleNameIdToDelete = 1; // ID à supprimer

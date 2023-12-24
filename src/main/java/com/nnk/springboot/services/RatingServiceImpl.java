@@ -28,10 +28,10 @@ public class RatingServiceImpl implements GenericService<Rating, Integer> {
     public Rating update(Integer id, Rating rating) {
         return ratingRepository.findById(id)
                 .map(r -> {
-                    r.setMoodysRating(r.getMoodysRating());
-                    r.setSandPRating(r.getSandPRating());
-                    r.setFitchRating(r.getFitchRating());
-                    r.setOrderNumber(r.getOrderNumber());
+                    r.setMoodysRating(rating.getMoodysRating());
+                    r.setSandPRating(rating.getSandPRating());
+                    r.setFitchRating(rating.getFitchRating());
+                    r.setOrderNumber(rating.getOrderNumber());
                     return ratingRepository.save(r);
                 }).orElseThrow(() -> new RuntimeException("Rating not founded"));
     }

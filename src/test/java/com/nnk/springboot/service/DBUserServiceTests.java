@@ -15,8 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,7 +29,7 @@ public class DBUserServiceTests {
     @InjectMocks
     private DBUserServiceImpl userService;
 
-    private DBUser DBUser;
+    private DBUser user;
 
 
     @Test
@@ -147,41 +149,7 @@ public class DBUserServiceTests {
         assertEquals("encoded_Azerty94@", capturedDBUser.getPassword());
     }
 
-    @Test
-    void testUpdate_UserFound() {
-        // Création d'un mock du repository
-        DBUserRepository userRepositoryMock = mock(DBUserRepository.class);
 
-        // Création d'un utilisateur fictif à mettre à jour
-        DBUser u = new DBUser();
-        u.setId(1); // Remplacez cela par l'ID existant à mettre à jour
-        u.setUsername("oldUsername");
-        u.setPassword("oldPassword");
-        u.setFullname("Old Full Name");
-
-        // Création d'un utilisateur avec des données mises à jour
-        DBUser updatedUserData = new DBUser();
-        updatedUserData.setId(1); // Remplacez cela par l'ID existant à mettre à jour
-        updatedUserData.setUsername("newUsername");
-        updatedUserData.setPassword("newPassword");
-        updatedUserData.setFullname("New Full Name");
-
-        // Configurer le comportement attendu du mock lors de l'appel à save
-        when(userRepositoryMock.save(any(DBUser.class))).thenReturn(updatedUserData);
-
-        // Création du service avec le mock
-        DBUserServiceImpl userService = new DBUserServiceImpl(userRepositoryMock, mock(PasswordEncoder.class));
-
-        // Appel de la méthode à tester
-        DBUser result = userService.update(u.getId(), updatedUserData);
-
-        // Vérification que la méthode save a été appelée avec les bonnes données
-        verify(userRepositoryMock).save(updatedUserData);
-
-        // Vérification du résultat ou des autres traitements nécessaires
-        assertNotNull(result); // Vérifie si le résultat n'est pas nul
-        // Ajoute d'autres assertions pour vérifier le résultat si nécessaire
-    }
 
 
     @Test
@@ -212,6 +180,42 @@ public class DBUserServiceTests {
         // Vérification que la méthode save du repository n'a pas été appelée
         verifyNoMoreInteractions(userRepositoryMock);
     }
+
+    @Test
+    public void testUpdateUserById() {
+        // Créer un utilisateur fictif pour le test
+        Integer userId = 1;
+        DBUser userToUpdate = new DBUser();
+        userToUpdate.setFullname("John Doe");
+        userToUpdate.setUsername("johndoe");
+        userToUpdate.setPassword("password");
+
+        // Créer un utilisateur existant dans la base de données pour simuler la recherche
+        DBUser existingUser = new DBUser();
+        existingUser.setId(userId);
+        existingUser.setFullname("Jane Smith");
+        existingUser.setUsername("janesmith");
+        existingUser.setPassword("oldpassword");
+
+        // Configurer le comportement simulé du repository
+        when(DBUserRepository.findById(userId)).thenReturn(Optional.of(existingUser));
+        when(DBUserRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Appeler la méthode à tester
+        DBUser updatedUser = userService.update(userId, userToUpdate);
+
+        // Vérifier que la méthode a renvoyé un utilisateur mis à jour
+        assertNotNull(updatedUser);
+        assertEquals(userId, updatedUser.getId());
+        assertEquals(userToUpdate.getFullname(), updatedUser.getFullname());
+        assertEquals(userToUpdate.getUsername(), updatedUser.getUsername());
+        assertEquals(userToUpdate.getPassword(), updatedUser.getPassword());
+
+        // Vérifier que la méthode a bien utilisé le repository pour sauvegarder l'utilisateur mis à jour
+        verify(DBUserRepository, times(1)).findById(userId);
+        verify(DBUserRepository, times(1)).save(existingUser);
+    }
+
 
     @Test
     public void testDeleteById() {
