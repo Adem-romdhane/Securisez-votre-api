@@ -2,6 +2,7 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.services.BidListServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 
 @Controller
@@ -23,8 +25,10 @@ public class BidListController {
     }
 
     @RequestMapping("/bidList/list")
-    public String home(Model model) {
+    public String home(Model model, HttpServletRequest httpServletRequest) {
+        Principal principal = httpServletRequest.getUserPrincipal();
         model.addAttribute("bidLists", bidListService.getAll());
+        model.addAttribute("loggedInUser", principal.getName());
         // TODO: call service find all bids to show to the view
         return "bidList/list";
     }
@@ -76,4 +80,7 @@ public class BidListController {
         // TODO: Find Bid by Id and delete the bid, return to Bid list
         return "redirect:/bidList/list";
     }
+
+
+
 }

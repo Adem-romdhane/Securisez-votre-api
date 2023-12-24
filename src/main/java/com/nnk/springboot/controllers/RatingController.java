@@ -3,6 +3,7 @@ package com.nnk.springboot.controllers;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.services.RatingServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 public class RatingController {
@@ -23,8 +25,10 @@ public class RatingController {
     }
 
     @RequestMapping("/rating/list")
-    public String home(Model model) {
+    public String home(Model model, HttpServletRequest httpServletRequest) {
+        Principal principal = httpServletRequest.getUserPrincipal();
         model.addAttribute("ratings", ratingService.getAll());
+        model.addAttribute("loggedInUser", principal.getName());
         // TODO: find all Rating, add to model
         return "rating/list";
     }

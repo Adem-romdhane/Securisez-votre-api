@@ -4,6 +4,7 @@ import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.services.RatingServiceImpl;
 import com.nnk.springboot.services.RuleNameServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 public class RuleNameController {
@@ -24,8 +26,11 @@ public class RuleNameController {
     }
 
     @RequestMapping("/ruleName/list")
-    public String home(Model model) {
+    public String home(Model model, HttpServletRequest httpServletRequest) {
+        Principal principal = httpServletRequest.getUserPrincipal();
         model.addAttribute("ruleNames", ruleNameService.getAll());
+        model.addAttribute("loggedInUser", principal.getName());
+
         // TODO: find all RuleName, add to model
         return "ruleName/list";
     }

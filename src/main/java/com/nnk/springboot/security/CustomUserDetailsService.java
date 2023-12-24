@@ -11,20 +11,24 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Service
-public class CustomUserDetailsService implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService  {
     private final DBUserRepository DBUserRepository;
 
-    public CustomUserDetailsService(DBUserRepository DBUserRepository) {
-        this.DBUserRepository = DBUserRepository;
+    private  DBUser user;
+
+    public CustomUserDetailsService(com.nnk.springboot.repositories.DBUserRepository dbUserRepository) {
+        DBUserRepository = dbUserRepository;
     }
 
-   @Override
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         DBUser user = DBUserRepository.findByUsername(username);
-       return new User(user.getUsername(),user.getPassword(),getGrantedAuthorities(user.getRole()));
+        return new User(user.getUsername(), user.getPassword(), getGrantedAuthorities(user.getRole()));
     }
 
     private List<GrantedAuthority> getGrantedAuthorities(String role) {
@@ -32,4 +36,5 @@ public class CustomUserDetailsService implements UserDetailsService {
         authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
         return authorities;
     }
+
 }

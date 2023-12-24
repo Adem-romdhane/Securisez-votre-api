@@ -4,20 +4,31 @@ import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.DBUser;
 import com.nnk.springboot.repositories.DBUserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @AllArgsConstructor
-public class DBUserServiceImpl implements GenericService<DBUser, Integer>{
+public class DBUserServiceImpl implements GenericService<DBUser, Integer> {
 
     private final DBUserRepository DBUserRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Override
-    public DBUser add(DBUser DBUser) {
-        return DBUserRepository.save(DBUser);
+    public DBUser add(DBUser DBuser) {
+        if (!isValid(DBuser.getPassword())){
+            throw new IllegalArgumentException("password non valide");
+        }
+        String encodedPassword = passwordEncoder.encode(DBuser.getPassword());
+        DBuser.setPassword(encodedPassword);
+        return DBUserRepository.save(DBuser);
     }
 
     @Override
@@ -48,10 +59,17 @@ public class DBUserServiceImpl implements GenericService<DBUser, Integer>{
         DBUser dbUser = null;
         if (optionalDBUser.isPresent()) {
             dbUser = optionalDBUser.get();
-        }else {
+        } else {
             throw new RuntimeException("user not founded for id : " + id);
         }
         return dbUser;
     }
 
+    public static boolean isValid(String password) {
+        Pattern p = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%^&+=]).{8,}$");
+        Matcher m = p.matcher(password);
+        System.out.println("PASSWORD VALID : " + m);
+        if (m.find()) return true;
+        return false;
+    }
 }
