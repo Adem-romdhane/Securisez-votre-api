@@ -28,6 +28,7 @@
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             return http.authorizeHttpRequests(auth -> {
                         auth.requestMatchers("/admin").hasRole("ADMIN");
+                        auth.requestMatchers("/user/update/{id}").hasRole("ADMIN"); // Restreindre l'accès à cet endpoint
                         auth.requestMatchers(("/user")).hasRole("USER");
                         auth.anyRequest().authenticated();
                     }).formLogin(Customizer.withDefaults())
