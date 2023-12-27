@@ -36,7 +36,6 @@ public class TradeController {
 
     @GetMapping("/trade/add")
     public String addUser(Trade trade) {
-        tradeService.add(trade);
         return "trade/add";
     }
 

@@ -35,7 +35,6 @@ public class CurveController {
 
     @GetMapping("/curvePoint/add")
     public String addBidForm(CurvePoint curvePoint) {
-        curvePointService.add(curvePoint);
         return "curvePoint/add";
     }
 
